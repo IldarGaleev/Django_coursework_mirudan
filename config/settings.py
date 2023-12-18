@@ -111,7 +111,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'ru-ru'
 
-TIME_ZONE = 'Europe/Ulyanovsk'
+TIME_ZONE = 'UTC' #'Europe/Ulyanovsk'
 
 USE_I18N = True
 
@@ -137,5 +137,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 CRONJOBS = [
-    ('*/5 * * * *', 'mailing_app.cron.schedule_job')
+    ('1 0 * * *', 'mailing_app.cron.schedule_daily'),
+    ('1 0 * * 0', 'mailing_app.cron.schedule_weekly'),
+    ('0 0 1 * *', 'mailing_app.cron.schedule_monthly'),
 ]
