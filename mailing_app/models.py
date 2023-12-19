@@ -21,22 +21,23 @@ class Mailing(models.Model):
     frequency = models.CharField(max_length=255, choices=FREQUENCY_CHOICES, verbose_name='периодичность')
     mailing_status = models.CharField(max_length=255, choices=MAILING_STATUS, verbose_name='статус рассылки')
     client = models.ManyToManyField(Client, verbose_name='получатели')
+    email = models.ForeignKey('MessageMailing',  on_delete=models.CASCADE, related_name='mailing')
 
 
-def __str__(self):
-    return f'{self.start_time} - {self.finish_time}'
+    def __str__(self):
+        return f'{self.start_time} - {self.finish_time}'
 
 
-class Meta:
-    verbose_name = 'рассылку'
-    verbose_name_plural = 'рассылки'
-    ordering = ('start_time',)
+    class Meta:
+        verbose_name = 'рассылку'
+        verbose_name_plural = 'рассылки'
+        ordering = ('start_time',)
 
 
 class MessageMailing(models.Model):
     subject = models.CharField(max_length=255, verbose_name='тема письма')
     body = models.TextField(verbose_name='тело письма')
-    mailing = models.ForeignKey(Mailing, on_delete=models.CASCADE, related_name='email')
+    # mailing = models.ForeignKey(Mailing,  on_delete=models.CASCADE, related_name='email')
 
     def __str__(self):
         return self.subject

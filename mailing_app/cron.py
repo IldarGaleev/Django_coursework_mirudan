@@ -9,7 +9,7 @@ def prepair_mailing():
     mailing_list = Mailing.objects.filter(mailing_status="created", start_time__lte=current_date,
                                           finish_time__gte=current_date)
     mailing_end = Mailing.objects.filter(mailing_status='launched', finish_time__lt=current_date)
-    print(f'mailing_list - {mailing_list}: mailing_end - {mailing_end} .!.')
+    #print(f'mailing_list - {mailing_list}: mailing_end - {mailing_end} .!.')
     if mailing_list.exists():
         for mail in mailing_list:
             mail.mailing_status = Mailing.MAILING_STATUS[2][0]
@@ -30,10 +30,10 @@ def schedule(frequency):
     def wrap():
         prepair_mailing()
         mailing_dail = get_mailing().filter(frequency=frequency)
-        print(f'hi {mailing_dail}')
+        #print(f'hi {mailing_dail}')
         for mail in mailing_dail:
-            send_mail(subject=mail.subject, message=mail.body,
-                      recipient_list=[client.email for client in mail.client])
+            send_mail(subject=mail.email.subject, message=mail.email.body, from_email=None,
+                      recipient_list=[client.email for client in mail.client.all()])
 
     return wrap
 
