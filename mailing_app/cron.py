@@ -2,6 +2,7 @@ from django.core.mail import send_mail
 from django.db.models.functions import datetime
 
 from mailing_app.models import Mailing
+from smtplib import SMTPDataError
 
 
 def prepair_mailing():
@@ -32,8 +33,12 @@ def schedule(frequency):
         mailing_dail = get_mailing().filter(frequency=frequency)
         #print(f'hi {mailing_dail}')
         for mail in mailing_dail:
-            send_mail(subject=mail.email.subject, message=mail.email.body, from_email=None,
-                      recipient_list=[client.email for client in mail.client.all()])
+            for client in mail.client.all():
+                try:
+                    send_mail(subject=mail.email.subject, message=mail.email.body, from_email=None,
+                              recipient_list=(client,))
+                except (SMTPDataError,) as send_error:
+                    print(send_error) #logging
 
     return wrap
 
